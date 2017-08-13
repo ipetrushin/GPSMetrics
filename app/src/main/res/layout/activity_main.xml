@@ -71,7 +71,7 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:id="@+id/p1long"
-            android:width="100dp"
+            android:width="110dp"
             android:hint="longtitude"
             android:layout_below="@+id/textView"
             android:layout_toEndOf="@+id/p1lat"
@@ -91,7 +91,7 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:id="@+id/p2long"
-            android:width="100dp"
+            android:width="110dp"
             android:hint="longtitude"
             android:layout_alignTop="@+id/p2lat"
             android:layout_toEndOf="@+id/p2lat"
@@ -103,7 +103,15 @@
             android:textAppearance="?android:attr/textAppearanceLarge"
             android:id="@+id/p1distance"
             android:layout_alignBottom="@+id/p1long"
-            android:layout_toEndOf="@+id/p1long" />
+            android:layout_toEndOf="@+id/p1long"
+            android:text="\?" />
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:textAppearance="?android:attr/textAppearanceLarge"
+            android:layout_alignBottom="@+id/p1long"
+            android:text="м"
+            android:layout_toEndOf="@+id/p1distance" />
 
         <TextView
             android:layout_width="wrap_content"
@@ -111,7 +119,16 @@
             android:textAppearance="?android:attr/textAppearanceLarge"
             android:id="@+id/p2distance"
             android:layout_alignBottom="@+id/p2long"
-            android:layout_toEndOf="@+id/p2long" />
+            android:layout_toEndOf="@+id/p2long"
+            android:text="\?" />
+
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:textAppearance="?android:attr/textAppearanceLarge"
+            android:layout_alignBottom="@+id/p2long"
+            android:text="м"
+            android:layout_toEndOf="@+id/p2distance" />
 
     </RelativeLayout>
 

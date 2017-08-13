@@ -10,6 +10,17 @@ import android.os.Bundle;
 import android.util.Log;
 import android.view.View;
 import android.widget.TextView;
+import android.widget.Toast;
+
+import java.io.IOException;
+import java.io.OutputStream;
+import java.net.HttpURLConnection;
+import java.net.MalformedURLException;
+import java.net.URL;
+import java.util.Arrays;
+import java.util.Date;
+import java.util.Locale;
+import java.util.Scanner;
 
 public class MainActivity extends AppCompatActivity {
 
@@ -57,6 +68,7 @@ public class MainActivity extends AppCompatActivity {
                 // Called when a new location is found by the network location provider.
                 double lat =  (location.getLatitude());
                 double lng =  (location.getLongitude());
+                sendGPSLocation(lat, lng);
                 Log.d("my", "lat " + lat + " long " + lng);
                 tvLat.setText("Lat: " + String.format("%.7f",lat));
                 tvLong.setText("Long: " + String.format("%.7f",lng));
@@ -94,6 +106,53 @@ public class MainActivity extends AppCompatActivity {
 
 
 
+    }
+    public void sendGPSLocation(final double lat, final double lng)   {
+        final Context ctx = this.getApplicationContext();
+        new Thread() {
+            // creating connection
+            public void run() {
+
+            try
+
+            {
+                String set_server_url = "http://194.176.114.21:8020/";
+                Date date = new Date();
+                long timestamp = date.getTime() / 1000;
+                String data = String.format(Locale.US, "{\"timestamp\" : %d, \"lat\" : %f, \"lng\": %f }", timestamp, lat, lng);
+                Log.d("my", data);
+
+                URL url = null;
+                try {
+                    url = new URL(set_server_url);
+                } catch (MalformedURLException e) {
+                    e.printStackTrace();
+                }
+                HttpURLConnection urlConnection = (HttpURLConnection) url.openConnection();
+                urlConnection.setDoOutput(true); // setting POST method
+
+                // creating stream for writing request
+                OutputStream out = urlConnection.getOutputStream();
+                out.write(data.getBytes());
+
+                // reading response
+                Scanner in = new Scanner(urlConnection.getInputStream());
+                if (in.hasNext()) {
+                    Toast.makeText(ctx, in.nextLine(), Toast.LENGTH_SHORT).show();
+                }
+                Toast.makeText(ctx, "No output returned", Toast.LENGTH_SHORT).show();
+                urlConnection.disconnect();
+            }
+
+            catch(
+            IOException e
+            )
+
+            {
+                Log.d("my", e.getMessage());
+            }
+        }
+        }.start();
     }
 
 }
