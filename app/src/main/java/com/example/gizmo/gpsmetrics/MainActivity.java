@@ -108,51 +108,55 @@ public class MainActivity extends AppCompatActivity {
 
     }
     public void sendGPSLocation(final double lat, final double lng)   {
-        final Context ctx = this.getApplicationContext();
-        new Thread() {
+
+        class MyThread extends Thread {
+            String output = "";
             // creating connection
             public void run() {
-
-            try
-
-            {
-                String set_server_url = "http://194.176.114.21:8020/";
-                Date date = new Date();
-                long timestamp = date.getTime() / 1000;
-                String data = String.format(Locale.US, "{\"timestamp\" : %d, \"lat\" : %f, \"lng\": %f }", timestamp, lat, lng);
-                Log.d("my", data);
-
-                URL url = null;
                 try {
-                    url = new URL(set_server_url);
-                } catch (MalformedURLException e) {
-                    e.printStackTrace();
+                    String set_server_url = "http://194.176.114.21:8020/";
+                    Date date = new Date();
+                    long timestamp = date.getTime() / 1000;
+                    String data = String.format(Locale.US, "{\"timestamp\" : %d, \"lat\" : %f, \"lng\": %f }", timestamp, lat, lng);
+                    Log.d("my", data);
+
+                    URL url = null;
+                    try {
+                        url = new URL(set_server_url);
+                    } catch (MalformedURLException e) {
+                        e.printStackTrace();
+                    }
+                    HttpURLConnection urlConnection = (HttpURLConnection) url.openConnection();
+                    urlConnection.setDoOutput(true); // setting POST method
+
+                    // creating stream for writing request
+                    OutputStream out = urlConnection.getOutputStream();
+                    out.write(data.getBytes());
+
+                    // reading response
+                    Scanner in = new Scanner(urlConnection.getInputStream());
+                    while (in.hasNext()) {
+                        output += in.nextLine();
+                    }
+
+                    urlConnection.disconnect();
                 }
-                HttpURLConnection urlConnection = (HttpURLConnection) url.openConnection();
-                urlConnection.setDoOutput(true); // setting POST method
-
-                // creating stream for writing request
-                OutputStream out = urlConnection.getOutputStream();
-                out.write(data.getBytes());
-
-                // reading response
-                Scanner in = new Scanner(urlConnection.getInputStream());
-                if (in.hasNext()) {
-                    Toast.makeText(ctx, in.nextLine(), Toast.LENGTH_SHORT).show();
+                catch(IOException e)
+                {
+                    Log.d("my", e.getMessage());
+                    output = e.getMessage();
                 }
-                Toast.makeText(ctx, "No output returned", Toast.LENGTH_SHORT).show();
-                urlConnection.disconnect();
-            }
-
-            catch(
-            IOException e
-            )
-
-            {
-                Log.d("my", e.getMessage());
             }
         }
-        }.start();
+        MyThread mt = new MyThread();
+        mt.start();
+        while (mt.isAlive()); // do nothing
+        if (mt.output.equals("")) {
+            mt.output = "No output received";
+        }
+        Toast.makeText(this, mt.output, Toast.LENGTH_SHORT).show();
+
+
     }
 
 }
