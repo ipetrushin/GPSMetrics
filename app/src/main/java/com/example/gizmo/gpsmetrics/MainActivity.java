@@ -26,19 +26,16 @@ public class MainActivity extends AppCompatActivity {
 
     TextView tvLat, tvLong, p1distance, p2distance, p1lat, p1long, p2lat, p2long;
     String provider;
-    class Point {
-        double lat, lng;
 
-        public Point(double latitude, double longtitude) {
-            this.lat = latitude;
-            this.lng = longtitude;
-        }
-    }
     LocationManager locationManager;
     Location location;
-    Point p1 = new Point(52.246557, 104.269823);
-    Point p2 = new Point(52.245391, 104.272060);
+    // боковая калитка 52.251264, 104.260736
+    // мусорка 52.250956, 104.259296
+    Point p1 = new Point(52.251264, 104.260736);
+    Point p2 = new Point(52.250956, 104.259296);
 
+    // Point p1 = new Point(52.246557, 104.269823);
+    // Point p2 = new Point(52.245391, 104.272060);
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -94,7 +91,9 @@ public class MainActivity extends AppCompatActivity {
 
         // Register the listener with the Location Manager to receive location updates
         try {
-            locationManager.requestLocationUpdates(LocationManager.NETWORK_PROVIDER, 0, 0, locationListener); }
+            locationManager.requestLocationUpdates(LocationManager.GPS_PROVIDER, 0, 0, locationListener);
+            locationManager.requestLocationUpdates(LocationManager.NETWORK_PROVIDER, 0, 0, locationListener);
+        }
         catch (SecurityException e) {};
     }
 
